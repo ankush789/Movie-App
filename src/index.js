@@ -9,7 +9,14 @@ import movies from './reducers';
 //Creating Store using Redux
 const store = createStore(movies);
 console.log('store', store);
-console.log('STATE',store.getState());
+console.log('Before STATE',store.getState());
+
+//Sending actions to the reducers using dispatch
+store.dispatch({
+  type: 'ADD_MOVIES',
+  movies: [{name:'superman'}]
+});
+console.log('After STate', store.getState());
 
 ReactDOM.render(
   <React.StrictMode>
