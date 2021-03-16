@@ -9,13 +9,26 @@ class App extends React.Component {
     const {store} = this.props;
     store.subscribe(()=>{
       console.log('UPDATED');
-      this.forceUpdate();
-    })
+     this.forceUpdate();
+    });
+    console.log('BEFORE STATE', this.props.store.getState());
+
     //MAKE API CALLS
     //Dispatch action
      store.dispatch(addMovies(data));
     console.log('STATE', this.props.store.getState());
   }
+
+    isMovieFavorite = (movie)=>{
+        const {favorites} = this.props.store.getState();
+        const index = favorites.indexOf(movie);
+        if(index !== -1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
   render(){
       const {list} = this.props.store.getState();// {list:[], favorites:[]}
       console.log('Render',this.props.store.getState());
@@ -30,7 +43,7 @@ class App extends React.Component {
 
         <div className="list">
             {list.map((movie, index) =>
-              <MovieCard movie={movie} key={`movie-${index}`} />
+              <MovieCard movie={movie} key={`movie-${index}`} dispatch = {this.props.store.dispatch} store={this.props.store} fav = {this.isMovieFavorite(movie)}/>
             )}
         </div>
         </div>
