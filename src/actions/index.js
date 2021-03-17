@@ -11,7 +11,8 @@
 //Action Types
 export const ADD_MOVIES = 'ADD_MOVIES';
 export const ADD_FAVORITES = 'ADD_FAVORITES';
-//export const REMOVE_FAVORITES = 'REMOVE_FAVORITES';
+export const REMOVE_FAVORITES = 'REMOVE_FAVORITES';
+export const SHOW_FAVORITES = 'SHOW_FAVORITES';
 
 
 //Action Creators
@@ -26,5 +27,17 @@ export function addFavorites(movie){
     return {
       type: ADD_FAVORITES,
       movie
+    }
+}
+export function removeFavorites(movie){
+    return {
+      type: REMOVE_FAVORITES,
+      movie
+    }
+}
+export function showFavorites(val){
+    return {
+      type: SHOW_FAVORITES,
+      val
     }
 }
