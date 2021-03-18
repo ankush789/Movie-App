@@ -9,16 +9,20 @@ import rootReducer from './reducers';
 
 //function logger(obj,next,action)
 //logger(obj)(next)(action) --> using the concept of curried function
-const logger = function({dispatch, getState}){
-  return function(next){
-    return function(action){
-      //middleware code
-      console.log('ACTION_TYPE=',action.type);
-      next(action);
-    }
-  }
-}
+// const logger = function({dispatch, getState}){
+//   return function(next){
+//     return function(action){
+//       //middleware code
+//       console.log('ACTION_TYPE=',action.type);
+//       next(action);
+//     }
+//   }
+// }
 
+const logger = ({dispatch, getState}) => (next) => (action) => {
+  console.log("ACTION_TYPE = ", action.type);
+  next(action);
+}
 //Creating Store using Redux
 const store = createStore(rootReducer, applyMiddleware(logger));
 console.log('store', store);
