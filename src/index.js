@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore,applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 
 import './index.css';
 import App from './components/App';
@@ -20,11 +21,25 @@ import rootReducer from './reducers';
 // }
 
 const logger = ({dispatch, getState}) => (next) => (action) => {
+  if(typeof action !== 'function')
   console.log("ACTION_TYPE = ", action.type);
   next(action);
 }
+
+// //We are using middleware to pass dispatch as arguement
+// //Thunk is a special kind of function which is returned by a function
+// const thunk = ({dispatch, getState}) => (next) => (action) => {
+// //We are telling redux if you get an action just pass it to the reducer 
+// //but if you get a function then just call that function with dispatch as its arguement
+//   if(typeof action === 'function'){
+//     action(dispatch);
+//     return;
+//   }
+//   next(action);
+// } 
+
 //Creating Store using Redux
-const store = createStore(rootReducer, applyMiddleware(logger));
+const store = createStore(rootReducer, applyMiddleware(logger,thunk));
 console.log('store', store);
 // console.log('Before STATE',store.getState());
 
