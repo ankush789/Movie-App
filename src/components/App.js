@@ -3,26 +3,20 @@ import {data} from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies, showFavorites} from '../actions';
-import { StoreContext } from '..';
+import { connect} from '../index';
 
 
 class App extends React.Component {
   componentDidMount(){
-    const {store} = this.props;
-    store.subscribe(()=>{
-      console.log('UPDATED');
-     this.forceUpdate();
-    });
-    console.log('BEFORE STATE', this.props.store.getState());
-
+ 
     //MAKE API CALLS
     //Dispatch action
-     store.dispatch(addMovies(data));
-    console.log('STATE', this.props.store.getState());
+     this.props.dispatch(addMovies(data));
+    // console.log('STATE', this.props.store.getState());
   }
 
     isMovieFavorite = (movie)=>{
-        const {movies} = this.props.store.getState();
+        const {movies} = this.props;
         const index = movies.favorites.indexOf(movie);
         if(index !== -1){
             return true;
@@ -32,17 +26,16 @@ class App extends React.Component {
         }
     }
     onChangeTabs = (val)=>{
-      const {store} = this.props;
-      store.dispatch(showFavorites(val));
+      this.props.dispatch(showFavorites(val));
     }
   render(){
-      const {movies, search} = this.props.store.getState(); // {movies:{}, search: {}}
+      const {movies, search} = this.props; // {movies:{}, search: {}}
       const {list, favorites, showFavorites} = movies;// {list:[], favorites:[]}
-      console.log('Render',this.props.store.getState());
+      console.log('Render',this.props);
       const displayMovies = showFavorites? favorites: list;
       return (
         <div className="App">
-            <Navbar dispatch = {this.props.store.dispatch} search={search}/>
+            <Navbar dispatch = {this.props.dispatch} search={search}/>
             <div className="main">
                 <div className="tabs">
                   <div className = {`tab ${showFavorites? '':'active-tabs'}`} onClick={()=>this.onChangeTabs(false)}>Movies</div>
@@ -51,7 +44,7 @@ class App extends React.Component {
 
                 <div className="list">
                     {displayMovies.map((movie, index) =>
-                      <MovieCard movie={movie} key={`movie-${index}`} dispatch = {this.props.store.dispatch} store={this.props.store} fav = {this.isMovieFavorite(movie)}/>
+                      <MovieCard movie={movie} key={`movie-${index}`} dispatch = {this.props.dispatch}  fav = {this.isMovieFavorite(movie)}/>
                     )}
                 </div>
                 {
@@ -65,21 +58,21 @@ class App extends React.Component {
 
 //AppWrapper is a wrapper over the the App so that we can use Consumer in our App
 //Component and pass store as props to the App
-class AppWrapper extends React.Component {
-  render() {
-    return (
-      <StoreContext.Consumer>
-         { (store) => <App store = {store} />}
-      </StoreContext.Consumer>
-    )
-  }
-}
+// class AppWrapper extends React.Component {
+//   render() {
+//     return (
+//       <StoreContext.Consumer>
+//          { (store) => <App store = {store} />}
+//       </StoreContext.Consumer>
+//     )
+//   }
+// }
 
-function callback(state){
+function mapStatetoProps(state){
   return {
     movies: state.movies,
     search: state.movies
   };
 }
-const connectedAppComponent = connect(callback)(App);
+const connectedAppComponent = connect(mapStatetoProps)(App);
 export default connectedAppComponent;
