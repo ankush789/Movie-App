@@ -3,6 +3,8 @@ import {data} from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies, showFavorites} from '../actions';
+import { StoreContext } from '..';
+
 
 class App extends React.Component {
   componentDidMount(){
@@ -60,4 +62,18 @@ class App extends React.Component {
       );
   }
 }
-export default App;
+
+//AppWrapper is a wrapper over the the App so that we can use Consumer in our App
+//Component and pass store as props to the App
+class AppWrapper extends React.Component {
+  render() {
+    return (
+      <StoreContext.Consumer>
+         {
+           (store) => <App store = {store} />
+         }
+      </StoreContext.Consumer>
+    )
+  }
+}
+export default AppWrapper;
